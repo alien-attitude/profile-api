@@ -1,17 +1,32 @@
-import { config } from "dotenv";
+import { config as loadEnvFromFile } from "dotenv";
 
-// Default to "development" if NODE_ENV is not set
-const nodeEnv = process.env.NODE_ENV || "development";
+// Read existing NODE_ENV (can be set by cross-env or the host)
+const NODE_ENV = process.env.NODE_ENV || "development";
 
-// Load .env.<NODE_ENV>.local (e.g., .env.development.local or .env.production.local)
-config({ path: `.env.${nodeEnv}.local` });
+// Only load from .env.*.local files when NOT in production
+if (NODE_ENV !== "production") {
+  // This is for local usage / dev convenience
+  const envFile = `.env.${NODE_ENV}.local`;
+  console.log(`Loading environment variables from ${envFile}`);
+  loadEnvFromFile({ path: envFile });
+} else {
+  // In production, we expect the environment to be provided by the host
+  console.log("Running in production; relying on host environment variables only");
+}
 
-export const { PORT, DB_URI, NODE_ENV, SERVER_URL } = process.env;
+// Now simply export from process.env (works in both cases)
+export const {
+  PORT,
+  MONGODB_URI,
+  SERVER_URL,
+} = process.env;
 
+// Optional: quick sanity log (booleans only)
 console.log("Env sanity check:", {
   NODE_ENV,
-  PORT: !!process.env.PORT,
-  SERVER_URL: !!process.env.SERVER_URL,
-  DB_URI: !!process.env.DB_URI,
-  // add any others you rely on, as booleans
+  PORT: !!PORT,
+  SERVER_URL: !!SERVER_URL,
+  MONGODB_URI: !!MONGODB_URI,
 });
+
+export { NODE_ENV };
