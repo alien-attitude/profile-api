@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server.js",
-    "start": "cross-env NODE_ENV=production nodemon server.js"
+    "start": "cross-env NODE_ENV=production MONGODB_URI=mongodb+srv://alienaattitude:trialends@cluster0.uxsaym5.mongodb.net/?appName=Cluster0 nodemon server.js"
   },
   "dependencies": {
     "axios": "^1.15.0",

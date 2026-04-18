@@ -1,25 +1,19 @@
 import mongoose from "mongoose";
-import { MONGODB_URI, NODE_ENV } from "../config/env.js";
+import { MONGODB_URI } from "../config/env.js";
+
+let isConnected = false;
 
 export default async function connectToDatabase() {
-  console.log("Connecting to MongoDB...");
-  console.log("NODE_ENV:", NODE_ENV);
-  console.log("MONGODB_URI present:", !!MONGODB_URI); // don't log the full URI in real logs
+  if (isConnected) {
+    console.log("Using existing MongoDB connection");
+    return;
+  }
 
   if (!MONGODB_URI) {
-    throw new Error("MONGODB_URI is not defined. Check your environment variables.");
+    throw new Error("MONGODB_URI is not defined.");
   }
 
-  try {
-    await mongoose.connect(MONGODB_URI, {
-      // optional: set explicit options if needed
-      // serverSelectionTimeoutMS: 5000,
-    });
-
-    console.log("MongoDB connection state:", mongoose.connection.readyState); // 1 = connected
-    console.log("MongoDB connected successfully");
-  } catch (err) {
-    console.error("MongoDB connection error:", err);
-    throw err;
-  }
+  await mongoose.connect(MONGODB_URI);
+  isConnected = true;
+  console.log("MongoDB connected successfully");
 }
