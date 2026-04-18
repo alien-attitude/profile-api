@@ -51,7 +51,7 @@ npm install
 
 ### 2. Configure environment
 ```bash
-cp .env.development.local .env
+cp .env.development.local 
 ```
 
 Edit `.env`:
