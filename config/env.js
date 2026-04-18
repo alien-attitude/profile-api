@@ -1,7 +1,9 @@
 import { config } from "dotenv";
 
-if (process.env.NODE_ENV !== "production") {
-    config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
-}
+// Default to "development" if NODE_ENV is not set
+const nodeEnv = process.env.NODE_ENV || "development";
 
-export const { PORT, DB_URI, NODE_ENV, SERVER_URL   } = process.env;
+// Load .env.<NODE_ENV>.local (e.g., .env.development.local or .env.production.local)
+config({ path: `.env.${nodeEnv}.local` });
+
+export const { PORT, DB_URI, NODE_ENV, SERVER_URL } = process.env;

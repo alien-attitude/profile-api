@@ -1,4 +1,4 @@
-import 'dotenv/config';
+//import 'dotenv/config';
 import app from './app.js';
 import connectToDatabase from './database/mongodb.js';
 import {PORT, SERVER_URL} from './config/env.js';
