@@ -52,6 +52,13 @@ app.get("/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+app.get("/", (req, res) => {
+    res.json({
+        status: "success",
+        message: "Welcome to the Profiles API",
+    });
+});
+
 // 404 — catch-all for unknown routes
 app.use((req, res) => {
     res.status(404).json({
