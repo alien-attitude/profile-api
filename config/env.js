@@ -7,3 +7,11 @@ const nodeEnv = process.env.NODE_ENV || "development";
 config({ path: `.env.${nodeEnv}.local` });
 
 export const { PORT, DB_URI, NODE_ENV, SERVER_URL } = process.env;
+
+console.log("Env sanity check:", {
+  NODE_ENV,
+  PORT: !!process.env.PORT,
+  SERVER_URL: !!process.env.SERVER_URL,
+  DB_URI: !!process.env.DB_URI,
+  // add any others you rely on, as booleans
+});

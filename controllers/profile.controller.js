@@ -168,10 +168,8 @@ export async function deleteProfile (req, res) {
             });
         }
 
-        res.json({
-            status: "success",
-            message: "Profile deleted",
-        });
+
+        return res.status(204).send();
     } catch (error) {
         console.error("deleteProfile error:", error);
         return res.status(500).json({

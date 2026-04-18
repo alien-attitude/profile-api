@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="30df45d9-71ca-47ff-92d8-84534cdd32a6" name="Changes" comment="handled get error">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/env.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/profile.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/profile.controller.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,8 +79,17 @@
       <workItem from="1776422341987" duration="9531000" />
       <workItem from="1776462440193" duration="7411000" />
       <workItem from="1776476483775" duration="30000" />
-      <workItem from="1776500358100" duration="1838000" />
+      <workItem from="1776500358100" duration="9279000" />
     </task>
+    <task id="LOCAL-00001" summary="handled get error">
+      <option name="closed" value="true" />
+      <created>1776510906495</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776510906495</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

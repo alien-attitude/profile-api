@@ -14,8 +14,8 @@ const startServer = async () => {
         })
     } catch(err){
         console.error("Database connection failed, Server not started", err);
-        throw err;
+        process.exit(1);
     }
 };
 
-startServer()
+await startServer()
