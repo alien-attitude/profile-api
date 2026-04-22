@@ -83,6 +83,7 @@ const fetchNationality = async (name) => {
 
         return {
             country_id: topCountry.country_id,
+            country_name: topCountry.country_name ?? topCountry.country_id,
             country_probability: topCountry.probability,
         };
     } catch (error) {

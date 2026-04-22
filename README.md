@@ -1,18 +1,18 @@
 # Profiles API 
 
-A REST API that enriches a name with gender, age, and nationality data from three free external APIs, stores the result in MongoDB, and exposes full CRUD endpoints.
+A REST API that enriches names with demographic data, stores profiles in MongoDB, and supports advanced filtering, sorting, pagination, and natural language search.
 
 ---
 
-## Tech Stack
+## Stack
 
-| Layer       | Choice                     |
-|-------------|----------------------------|
-| Runtime     | Node.js                    |
-| Framework   | Express.js                 |
-| Database    | MongoDB + Mongoose         |
-| ID scheme   | UUID v7 (time-sortable)    |
-| HTTP client | Axios                      |
+| Layer        | Choice                        |
+|--------------|-------------------------------|
+| Runtime      | Node.js (ESM)                 |
+| Framework    | Express.js                    |
+| Database     | MongoDB + Mongoose            |
+| ID scheme    | UUID v7 (time-sortable)       |
+| HTTP client  | Axios                         |
 
 ---
 
@@ -20,58 +20,42 @@ A REST API that enriches a name with gender, age, and nationality data from thre
 
 ```
 profiles-api/
-├── src/
-│   ├── config/
-│   │   └── env.js                  # Environment handlers
-│   ├── controllers/
-│   │   └── profile.controller.js   # Route handlers
-|   ├── database/
-│   │   └── mongodb.js              # MongoDB connection
-│   ├── models/
-│   │   └── profile.model.js        # Mongoose schema
-│   ├── routes/
-│   │   └── profile.route.js         # Express router
-│   ├── services/
-│   │   └── externalApis.service.js     # Genderize / Agify / Nationalize
-│   ├── app.js                  # Express app setup
-│   └── server.js               # Entry point
-├── .env.development.local
-├── package.json
-└── README.md
+├── app.js
+├── server.js
+├── seed_profiles.json
+├── vercel.json
+├── scripts/
+│   └── seed.js                     # DB seeding script
+├── config/
+│   └── env.js
+├── database/
+│   └── mongodb.js
+├── controllers/
+│   └── profile.controller.js
+├── models/
+│   └── profile.model.js
+├── routes/
+│   └── profile.route.js
+└── services/
+    ├── externalApis.service.js
+    └── nlpParser.service.js        # Rule-based NLP parser
 ```
 
 ---
 
 ## Quick Start
 
-### 1. Install dependencies
 ```bash
 npm install
-```
 
-### 2. Configure environment
-```bash
-cp .env.development.local 
-```
+# Local dev
+cp .env.development.local.example .env.development.local
+# Set MONGODB_URI in that file
 
-Edit `.env`:
-```
-MONGODB_URI=mongodb://localhost:27017/profiles_db
-PORT=3000
-```
-
-For MongoDB Atlas:
-```
-MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/profiles_db?retryWrites=true&w=majority
-```
-
-### 3. Start the server
-```bash
-# Production
-npm start
-
-# Development (auto-reload)
 npm run dev
+
+# Seed the database (run once, or re-run safely — duplicates are skipped)
+node scripts/seed.js
 ```
 
 ---
@@ -79,133 +63,131 @@ npm run dev
 ## API Reference
 
 ### POST `/api/profiles`
-Creates a profile by calling three external APIs. Returns the existing profile if the name was already stored.
-
-**Request body:**
-```json
-{ "name": "ella" }
-```
-
-**201 Created (new profile):**
-```json
-{
-  "status": "success",
-  "data": {
-    "id": "b3f9c1e2-7d4a-4c91-9c2a-1f0a8e5b6d12",
-    "name": "ella",
-    "gender": "female",
-    "gender_probability": 0.99,
-    "sample_size": 1234,
-    "age": 46,
-    "age_group": "adult",
-    "country_id": "DK",
-    "country_probability": 0.85,
-    "created_at": "2026-04-01T12:00:00.000Z"
-  }
-}
-```
-
-**200 OK (duplicate):**
-```json
-{
-  "status": "success",
-  "message": "Profile already exists",
-  "data": { "...existing profile..."}
-}
-```
-
----
+Creates a profile by enriching a name via Genderize, Agify, and Nationalize APIs.
 
 ### GET `/api/profiles`
-Returns all profiles. Supports optional case-insensitive query filters.
+Returns paginated, filtered, sorted profiles.
 
-**Query params:** `gender`, `country_id`, `age_group`
+**Filters:** `gender`, `age_group`, `country_id`, `min_age`, `max_age`, `min_gender_probability`, `min_country_probability`
+
+**Sorting:** `sort_by=age|created_at|gender_probability` + `order=asc|desc`
+
+**Pagination:** `page` (default: 1), `limit` (default: 10, max: 50)
 
 ```
-GET /api/profiles?gender=female&country_id=NG
+GET /api/profiles?gender=male&country_id=NG&min_age=25&sort_by=age&order=desc&page=1&limit=10
 ```
 
-**200 OK:**
-```json
-{
-  "status": "success",
-  "count": 1,
-  "data": [
-    {
-      "id": "...",
-      "name": "ella",
-      "gender": "female",
-      "age": 46,
-      "age_group": "adult",
-      "country_id": "DK"
-    }
-  ]
-}
-```
-
----
+### GET `/api/profiles/search?q=...`
+Natural language query endpoint. See NLP section below.
 
 ### GET `/api/profiles/:id`
-Returns a single full profile by its UUID.
-
-**200 OK:**
-```json
-{
-  "status": "success",
-  "data": { "...full profile..."}
-}
-```
-
-**404 Not Found:**
-```json
-{ "status": "error", "message": "Profile not found" }
-```
-
----
+Returns a single profile by UUID.
 
 ### DELETE `/api/profiles/:id`
-Deletes a profile. Returns `204 No Content` on success.
+Deletes a profile. Returns `204 No Content`.
 
 ---
 
-## Error Responses
+## Natural Language Parsing Approach
 
-| Status | Scenario                              |
-|--------|---------------------------------------|
-| 400    | Missing or empty `name`               |
-| 422    | `name` is not a string                |
-| 404    | Profile ID not found                  |
-| 502    | External API returned invalid data    |
-| 500    | Internal server error                 |
+The `/api/profiles/search` endpoint accepts plain English queries via the `q` parameter and converts them to structured database filters using **rule-based keyword matching only** — no AI, no LLMs.
 
-**502 format:**
-```json
-{ "status": "error", "message": "Genderize returned an invalid response" }
-```
+### How it works
+
+The parser (`services/nlpParser.service.js`) lowercases the query, splits it into tokens, and matches against predefined keyword sets and regex patterns in this order:
+
+1. **Gender detection** — token set matching
+2. **Age group detection** — token set matching
+3. **"young" keyword** — maps to `min_age=16, max_age=24`
+4. **Age range patterns** — regex matching
+5. **Country detection** — substring match against a country name map (longest match first)
+
+If nothing matches, the endpoint returns `{ "status": "error", "message": "Unable to interpret query" }`.
+
+### Supported keywords and mappings
+
+#### Gender
+| Keywords | Maps to |
+|----------|---------|
+| male, males, man, men, boy, boys, guy, guys | `gender=male` |
+| female, females, woman, women, girl, girls, lady, ladies | `gender=female` |
+| "male and female" (both present) | no gender filter |
+
+#### Age groups
+| Keywords | Maps to |
+|----------|---------|
+| child, children, kid, kids, infant, infants | `age_group=child` |
+| teenager, teenagers, teen, teens, adolescent, adolescents, youth | `age_group=teenager` |
+| adult, adults | `age_group=adult` |
+| senior, seniors, elderly, elder, elders, old | `age_group=senior` |
+
+#### Special age keyword
+| Keyword | Maps to |
+|---------|---------|
+| young | `min_age=16, max_age=24` |
+
+#### Age range patterns (regex)
+| Pattern | Maps to |
+|---------|---------|
+| `between X and Y` / `between X to Y` | `min_age=X, max_age=Y` |
+| `above X` / `over X` / `older than X` / `at least X` | `min_age=X` |
+| `below X` / `under X` / `younger than X` / `at most X` | `max_age=X` |
+| `aged X` / `age X` / `exactly X` | `min_age=X, max_age=X` |
+
+#### Countries
+All 65 countries in the dataset are supported by full name, plus common aliases:
+
+| Query term | Maps to |
+|------------|---------|
+| nigeria | NG |
+| kenya | KE |
+| south africa | ZA |
+| ghana | GH |
+| ethiopia | ET |
+| egypt | EG |
+| tanzania | TZ |
+| uganda | UG |
+| ivory coast / côte d'ivoire | CI |
+| dr congo / democratic republic of congo / drc | CD |
+| united states / usa / america | US |
+| united kingdom / uk / britain / england | GB |
+| ... (all 65 dataset countries + aliases) | |
+
+### Example query mappings
+
+| Query | Result filters |
+|-------|----------------|
+| `young males from nigeria` | `gender=male, min_age=16, max_age=24, country_id=NG` |
+| `females above 30` | `gender=female, min_age=30` |
+| `people from angola` | `country_id=AO` |
+| `adult males from kenya` | `gender=male, age_group=adult, country_id=KE` |
+| `male and female teenagers above 17` | `age_group=teenager, min_age=17` |
+| `elderly women in ghana` | `gender=female, age_group=senior, country_id=GH` |
+| `boys between 13 and 18` | `gender=male, min_age=13, max_age=18` |
 
 ---
 
-## Classification Rules
+## Limitations & Edge Cases Left Out
 
-| Age range | Group       |
-|-----------|-------------|
-| 0 – 12    | `child`     |
-| 13 – 19   | `teenager`  |
-| 20 – 59   | `adult`     |
-| 60+       | `senior`    |
+### Parser limitations
 
-Nationality is the `country_id` with the highest `probability` from the Nationalize API.
+1. **No negation support** — queries like "not from nigeria" or "excluding males" are not handled. The parser ignores negative constructs entirely.
 
----
+2. **No OR logic for countries** — "people from nigeria or ghana" will only match Nigeria (first country found). Multiple countries in one query are not supported.
 
-## Deployment (Render / Railway / Fly.io)
+3. **Ambiguous "young adult"** — if a query contains both "young" (→ ages 16–24) and "adult" (→ age_group=adult), the age_group takes priority and "young" age range is ignored.
 
-1. Push code to GitHub
-2. Create a new Web Service, point to repo
-3. Set environment variables:
-    - `MONGODB_URI` — your Atlas connection string
-    - `PORT` — (usually auto-set by the platform)
-4. Start command: `npm start`
+4. **No partial name matching** — country names must appear exactly as known aliases. "Naija" (slang for Nigeria) won't match.
 
-The server binds to `0.0.0.0` automatically via Express default behaviour.
+5. **No ordinal or relative terms** — "the oldest", "top 5", "most common" are not parsed.
 
+6. **No compound conjunctions** — "males from nigeria and kenya" or "teenagers and adults" are not supported.
+
+7. **Typo tolerance is zero** — "nigria" instead of "nigeria" will not match. No fuzzy matching.
+
+8. **"young" is not an age_group** — it maps to `min_age=16, max_age=24` for filtering only. It is not stored in the database and cannot be used as an age_group filter value.
+
+9. **Number words not supported** — "thirty year olds" won't parse. Only digits work: "above 30".
+
+10. **No confidence filters via NLP** — queries like "highly confident female profiles" do not map to `min_gender_probability`. Only structured query params support probability filters.

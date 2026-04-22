@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30df45d9-71ca-47ff-92d8-84534cdd32a6" name="Changes" comment="handled get error">
+    <list default="true" id="30df45d9-71ca-47ff-92d8-84534cdd32a6" name="Changes" comment="vercel, json created">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/env.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/profile.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/profile.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/profile.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/profile.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/profile.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/profile.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/externalApis.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/externalApis.service.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +48,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.profiles.executor&quot;: &quot;Debug&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
@@ -57,10 +60,21 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2025.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="profiles" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:3000/api/profiles">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.profiles" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -79,7 +93,10 @@
       <workItem from="1776422341987" duration="9531000" />
       <workItem from="1776462440193" duration="7411000" />
       <workItem from="1776476483775" duration="30000" />
-      <workItem from="1776500358100" duration="9279000" />
+      <workItem from="1776500358100" duration="17242000" />
+      <workItem from="1776810385562" duration="5271000" />
+      <workItem from="1776864912704" duration="5876000" />
+      <workItem from="1776878270785" duration="4437000" />
     </task>
     <task id="LOCAL-00001" summary="handled get error">
       <option name="closed" value="true" />
@@ -89,7 +106,39 @@
       <option name="project" value="LOCAL" />
       <updated>1776510906495</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="resolving db connection error">
+      <option name="closed" value="true" />
+      <created>1776512969142</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776512969142</updated>
+    </task>
+    <task id="LOCAL-00003" summary="resolving db connection error again">
+      <option name="closed" value="true" />
+      <created>1776519535375</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1776519535375</updated>
+    </task>
+    <task id="LOCAL-00004" summary="db connection check, final?">
+      <option name="closed" value="true" />
+      <created>1776521354736</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1776521354736</updated>
+    </task>
+    <task id="LOCAL-00005" summary="vercel, json created">
+      <option name="closed" value="true" />
+      <created>1776521892500</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1776521892500</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -98,6 +147,10 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge branch 'main' of https://github.com/alien-attitude/profile-api&#10;# Please enter a commit message to explain why this merge is necessary,&#10;# especially if it merges an updated upstream into a topic branch.&#10;#&#10;# Lines starting with '#' will be ignored, and an empty message aborts&#10;# the commit." />
     <MESSAGE value="handled get error" />
-    <option name="LAST_COMMIT_MESSAGE" value="handled get error" />
+    <MESSAGE value="resolving db connection error" />
+    <MESSAGE value="resolving db connection error again" />
+    <MESSAGE value="db connection check, final?" />
+    <MESSAGE value="vercel, json created" />
+    <option name="LAST_COMMIT_MESSAGE" value="vercel, json created" />
   </component>
 </project>
