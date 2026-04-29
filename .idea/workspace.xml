@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="30df45d9-71ca-47ff-92d8-84534cdd32a6" name="Changes" comment="vercel, json created">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/profile.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/profile.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/profile.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/profile.model.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/profile.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/profile.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/externalApis.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/externalApis.service.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +92,8 @@
       <workItem from="1776500358100" duration="17242000" />
       <workItem from="1776810385562" duration="5271000" />
       <workItem from="1776864912704" duration="5876000" />
-      <workItem from="1776878270785" duration="4437000" />
+      <workItem from="1776878270785" duration="5805000" />
+      <workItem from="1777026182518" duration="452000" />
     </task>
     <task id="LOCAL-00001" summary="handled get error">
       <option name="closed" value="true" />
