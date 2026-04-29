@@ -48,9 +48,11 @@ function buildQueryOptions(query) {
     if (isNaN(parsedPage)  || parsedPage < 1) {
         return { error: { status: 400, message: "Invalid query parameters" } };
     }
-    if (isNaN(parsedLimit) || parsedLimit < 1 || parsedLimit > 50) {
+    if (isNaN(parsedLimit) || parsedLimit < 1) {
         return { error: { status: 400, message: "Invalid query parameters" } };
     }
+    // Cap limit at 50 — do not reject, silently enforce the maximum
+    const cappedLimit = Math.min(parsedLimit, 50);
 
     // Validate numeric filters
     const numericFields = { min_age, max_age, min_gender_probability, min_country_probability };
@@ -84,8 +86,8 @@ function buildQueryOptions(query) {
         filter,
         sort,
         page: parsedPage,
-        limit: parsedLimit,
-        skip: (parsedPage - 1) * parsedLimit,
+        limit: cappedLimit,
+        skip: (parsedPage - 1) * cappedLimit,
     };
 }
 
